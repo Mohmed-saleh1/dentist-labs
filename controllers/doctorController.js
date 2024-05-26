@@ -1,4 +1,4 @@
- const { uploadMixOfImages } = require("../middlewares/imagesAndFilesProcess");
+const { uploadMixOfImages } = require("../middlewares/imagesAndFilesProcess");
 const { Order } = require("../models/order.model");
 const { User } = require("../models/user.model");
 const { genUIDOrder } = require("../utils/genUIDOrder");
@@ -68,24 +68,27 @@ exports.createOrderController = async (req, res, next) => {
   }
 };
 
-exports.editOrderController = async (req, res) => {
+async function editOrderController(req, res) {
   try {
-    const order = await Order.findById(req.params.id);
+    const order = await Order.findById(req.params.id, req.body, {
+      new: true,
+    });
     if (!order) {
       return res.status(404).json("Order Not Found");
     }
     if (order.status == "END(F)") {
       return res.status(400).json("Can't Order Ended Orders");
     }
-    const user = await User.findByIdAndUpdate(req.userId, req.body, {
-      new: true,
-    });
+    const user = await User.findById(req.userId);
+    if (order.prova) {
+      order.status = "DocReady(F)";
+    }
     return res.status(200).json(order);
   } catch (error) {
     console.log(error);
     return res.status(500).json("INTERNAL SERVER ERROR");
   }
-};
+}
 
 exports.getOrdersController = async (req, res) => {
   try {
