@@ -68,7 +68,7 @@ exports.createOrderController = async (req, res, next) => {
   }
 };
 
-async function editOrderController(req, res) {
+exports.editOrderController = async (req, res) => {
   try {
     const order = await Order.findById(req.params.id, req.body, {
       new: true,
@@ -88,7 +88,7 @@ async function editOrderController(req, res) {
     console.log(error);
     return res.status(500).json("INTERNAL SERVER ERROR");
   }
-}
+};
 
 exports.getOrdersController = async (req, res) => {
   try {

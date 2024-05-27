@@ -25,7 +25,6 @@ router.put(
   isDoc,
   uploadOrderImgsAndFiles,
   saveFilesNameToDB,
-  uploadOrderImgsAndFiles,
   editOrderController
 );
 
