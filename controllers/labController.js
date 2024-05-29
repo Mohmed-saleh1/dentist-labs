@@ -132,22 +132,35 @@ async function orderPaidController(req, res) {
 
 async function getProfitsController(req, res) {
   try {
+    const { startDate, endDate } = req.body;
+
+    // Convert startDate and endDate to Date objects
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+
+    // Check if startDate and endDate are valid dates
+    if (isNaN(start.getTime()) || isNaN(end.getTime())) {
+      return res.status(400).json("Invalid date format. Please use YYYY-MM-DD.");
+    }
+
     const orders = await Order.find({
       lab_id: req.userId,
       status: "END(F)",
+      orderDate: {
+        $gte: start,
+        $lte: end,
+      },
     }).populate("doc_id", "username");
 
-    if (!orders[0]) {
+    if (orders.length === 0) {
       return res.status(404).json("No Orders Available");
     }
 
-    const doctorProfits = {};
-
-    for (const order of orders) {
+    const doctorProfits = orders.reduce((acc, order) => {
       const doctorId = order.doc_id._id;
 
-      if (!doctorProfits[doctorId]) {
-        doctorProfits[doctorId] = {
+      if (!acc[doctorId]) {
+        acc[doctorId] = {
           doctorId: doctorId,
           doctorName: order.doc_id.username,
           totalPrice: 0,
@@ -156,12 +169,13 @@ async function getProfitsController(req, res) {
         };
       }
 
-      doctorProfits[doctorId].totalPrice += order.price;
-      doctorProfits[doctorId].totalPaid += order.paid;
-      doctorProfits[doctorId].orderCount++;
-    }
+      acc[doctorId].totalPrice += order.price;
+      acc[doctorId].totalPaid += order.paid;
+      acc[doctorId].orderCount++;
 
-    // Convert object to array of values
+      return acc;
+    }, {});
+
     const profitsArray = Object.values(doctorProfits);
 
     return res.status(200).json(profitsArray);
@@ -170,6 +184,8 @@ async function getProfitsController(req, res) {
     return res.status(500).json("INTERNAL SERVER ERROR");
   }
 }
+
+
 
 async function setPublicDelivery(req, res) {
   try {
