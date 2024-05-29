@@ -26,20 +26,36 @@ exports.saveFilesNameToDB = asyncHandler(async (req, res, next) => {
     const hostname = `${req.protocol}://${req.get("host")}`;
 
     // Process images
-    if (req.files.images) {
-      req.body.images = [];
-      await Promise.all(
-        req.files.images.map(async (img, index) => {
-          const imageName = `order-${Date.now()}-${index + 1}.jpeg`;
-          await sharp(img.buffer)
-            .toFormat("jpeg")
-            .toFile(`uploads/images/${imageName}`);
-          const fullPath = `${hostname}/images/${imageName}`;
-          req.body.images.push(fullPath);
-        })
-      );
-    }
+    // if (req.files.images) {
+    //   req.body.images = [];
+    //   await Promise.all(
+    //     req.files.images.map(async (img, index) => {
+    //       const imageName = `order-${Date.now()}-${index + 1}.jpeg`;
+    //       await sharp(img.buffer)
+    //         .toFormat("jpeg")
+    //         .toFile(`uploads/images/${imageName}`);
+    //       const fullPath = `${hostname}/images/${imageName}`;
+    //       req.body.images.push(fullPath);
+    //     })
+    //   );
+    // }
 
+    if (req.files.image && req.files.image.length > 0) {
+      const imageFileName = `${Date.now()}-${slugify(
+        req.files.image[0].originalname
+      )}`;
+      await new Promise((resolve, reject) => {
+        fs.writeFile(
+          `uploads/images/${imageFileName}`,
+          req.files.image[0].buffer,
+          (err) => {
+            if (err) reject(err);
+            else resolve();
+          }
+        );
+      });
+      req.body.image = `${hostname}/images/${imageFileName}`;
+    }
     // Process video
     if (req.files.video && req.files.video.length > 0) {
       const videoFileName = `${Date.now()}-${slugify(
