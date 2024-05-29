@@ -32,7 +32,7 @@ exports.createOrderController = async (req, res, next) => {
 
     // Calculate the price
     const price = req.body.teethNo * user.labContract[req.body.type];
-
+    console.log(price);
     // Create a new order instance
     const order = new Order({
       UID,
@@ -44,7 +44,7 @@ exports.createOrderController = async (req, res, next) => {
       type: req.body.type,
       description: req.body.description,
       screen: req.body.screen,
-      price,
+      price: price,
       paid: 0,
       lab_id: user.labId._id,
       doc_id: user._id,
