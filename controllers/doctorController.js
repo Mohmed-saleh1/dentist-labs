@@ -5,8 +5,8 @@ const { genUIDOrder } = require("../utils/genUIDOrder");
 
 exports.uploadOrderImgsAndFiles = uploadMixOfImages([
   {
-    name: "images",
-    maxCount: 5,
+    name: "image",
+    maxCount: 1,
   },
   {
     name: "file",
@@ -59,14 +59,9 @@ exports.createOrderController = async (req, res, next) => {
     }
     // Save the order to the database
     await order.save();
-
-    // Respond with the created order
     res.status(200).json({ data: order });
   } catch (error) {
-    // Log the error to the console
     console.error(error);
-
-    // Respond with a 500 Internal Server Error status
     return res.status(500).json({ message: "INTERNAL SERVER ERROR" });
   }
 };
