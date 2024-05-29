@@ -62,7 +62,7 @@ const orderSchema = new mongoose.Schema(
       maxLength: 255,
     },
     price: {
-      type: String,
+      type: Number,
       required: true,
     },
     paid: {

@@ -63,10 +63,10 @@ async function markOrderReadyController(req, res) {
     if (order.status !== "UNDERWAY(P)" || order.status !== "UNDERWAY(F)") {
       return res.status(400).json("Can't Set Order To Ready");
     }
-    if(order.status ==="UNDERWAY(P)"){
+    if (order.status === "UNDERWAY(P)") {
       order.status = "LABREADY(P)";
     }
-    if(order.status ==="UNDERWAY(F)"){
+    if (order.status === "UNDERWAY(F)") {
       order.status = "LABREADY(F)";
     }
     await order.save();
@@ -134,7 +134,7 @@ async function getProfitsController(req, res) {
   try {
     const orders = await Order.find({
       lab_id: req.userId,
-      status: "End",
+      status: "END(F)",
     }).populate("doc_id", "username");
 
     if (!orders[0]) {
@@ -144,7 +144,7 @@ async function getProfitsController(req, res) {
     const doctorProfits = {};
 
     for (const order of orders) {
-      const doctorId = order.doc_id._id; // Assuming the doctor object is populated
+      const doctorId = order.doc_id._id;
 
       if (!doctorProfits[doctorId]) {
         doctorProfits[doctorId] = {
