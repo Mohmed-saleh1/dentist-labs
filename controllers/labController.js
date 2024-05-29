@@ -146,7 +146,7 @@ async function getProfitsController(req, res) {
     const orders = await Order.find({
       lab_id: req.userId,
       status: "END(F)",
-      orderDate: {
+      date: {
         $gte: start,
         $lte: end,
       },
