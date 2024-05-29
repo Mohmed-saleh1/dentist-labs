@@ -48,7 +48,7 @@ exports.createOrderController = async (req, res, next) => {
       paid: 0,
       lab_id: user.labId._id,
       doc_id: user._id,
-      images: req.body.images,
+      image: req.body.image,
       file: req.body.file,
       video: req.body.video,
     });
