@@ -43,7 +43,6 @@ exports.createOrderController = async (req, res, next) => {
       color: req.body.color,
       type: req.body.type,
       description: req.body.description,
-      voiceNote: req.body.voiceNote,
       screen: req.body.screen,
       price,
       paid: 0,
@@ -53,7 +52,11 @@ exports.createOrderController = async (req, res, next) => {
       file: req.body.file,
       video: req.body.video,
     });
-
+    if (order.file) {
+      order.status = "UNDERWAY(P)";
+    } else {
+      order.status = "DocReady(P)";
+    }
     // Save the order to the database
     await order.save();
 
@@ -70,7 +73,7 @@ exports.createOrderController = async (req, res, next) => {
 
 exports.editOrderController = async (req, res) => {
   try {
-    const order = await Order.findById(req.params.id, req.body, {
+    const order = await Order.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
     });
     if (!order) {
@@ -82,6 +85,9 @@ exports.editOrderController = async (req, res) => {
     const user = await User.findById(req.userId);
     if (order.prova) {
       order.status = "DocReady(F)";
+    }
+    if (order.file) {
+      order.status = "LabReady(F)";
     }
     return res.status(200).json(order);
   } catch (error) {

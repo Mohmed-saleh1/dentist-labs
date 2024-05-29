@@ -45,7 +45,6 @@ const orderSchema = new mongoose.Schema(
     status: {
       type: String,
       required: true,
-      default: "DocReady(P)",
       enum: [
         "DocReady(P)",
         "DocReady(F)",
