@@ -40,7 +40,6 @@ exports.createOrderController = async (req, res, next) => {
 
     // Calculate the price
     const price = req.body.teethNo * user.labContract[req.body.type];
-    console.log(price);
     // Create a new order instance
     const order = new Order({
       UID,
@@ -95,7 +94,7 @@ exports.editOrderController = async (req, res) => {
       }
       order.status = "DocReady(F)";
     }
-    if (order.file) {
+    if (order.file !== "null") {
       order.status = "LabReady(F)";
     }
 
