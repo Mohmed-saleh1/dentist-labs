@@ -95,7 +95,7 @@ async function markOrderDeliveredDocController(req, res) {
     if (!user) {
       return res.status(404).json("User Not Found");
     }
-    if (order.status !== "OTW_DOC(P)" || order.status !== "OTW_DOC(F)") {
+    if (order.status !== "OTW_DOC(P)" && order.status !== "OTW_DOC(F)") {
       return res.status(400).json("Can't Set Order Delivered");
     }
     if (order.status === "OTW_DOC(F)") {
