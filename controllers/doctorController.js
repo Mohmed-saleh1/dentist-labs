@@ -78,38 +78,24 @@ exports.createOrderController = async (req, res, next) => {
 
 exports.editOrderController = async (req, res) => {
   try {
-    const order = await Order.findById(req.params.id);
-
+    const order = await Order.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+    });
     if (!order) {
       return res.status(404).json("Order Not Found");
     }
-
-    if (order.status === "END(F)") {
-      return res.status(400).json("Can't edit ended orders");
+    if (order.status == "END(F)") {
+      return res.status(400).json("Can't Order Ended Orders");
     }
-
-    // Update order fields with req.body
-    for (const key in req.body) {
-      if (req.body.hasOwnProperty(key)) {
-        order[key] = req.body[key];
-      }
-    }
-
     const user = await User.findById(req.userId);
-    if (!user) {
-      return res.status(404).json("User Not Found");
-    }
-
-    if (req.body.prova === "false") {
+    if (req.body.prova && req.body.prova === "false") {
       order.status = "DocReady(F)";
     }
-
-    if (req.body.file) {
+    if (order.file) {
       order.status = "LabReady(F)";
     }
-
-    await order.save();
-
+    
+    order.save();
     return res.status(200).json(order);
   } catch (error) {
     console.log(error);
