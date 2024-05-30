@@ -113,6 +113,11 @@ async function markOrderDeliveredDocController(req, res) {
 
 async function takeOrderController(req, res) {
   try {
+    // Validate req.params.id and req.userId
+    if (!req.params.id || !req.userId) {
+      return res.status(400).json({ error: "Invalid Order ID or User ID" });
+    }
+
     const order = await Order.findById(req.params.id);
     if (!order) {
       return res.status(404).json({ error: "Order Not Found" });
@@ -140,9 +145,12 @@ async function takeOrderController(req, res) {
         return res.status(400).json({ error: "Invalid Order Status" });
     }
 
-    user.delOrders.push(order._id);
-    await order.save();
-    await user.save();
+    if (!user.delOrders.includes(order._id)) {
+      user.delOrders.push(order._id);
+    }
+
+    // Save order and user concurrently
+    await Promise.all([order.save(), user.save()]);
 
     return res.status(200).json(order);
   } catch (error) {
@@ -150,6 +158,7 @@ async function takeOrderController(req, res) {
     return res.status(500).json({ error: "INTERNAL SERVER ERROR" });
   }
 }
+
 async function getProfitsController(req, res) {
   try {
     const user = await User.findById(req.userId);
