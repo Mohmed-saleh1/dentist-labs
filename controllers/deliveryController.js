@@ -20,17 +20,39 @@ async function getReadyOrders(req, res) {
 
 async function getMyOrdersController(req, res) {
   try {
-    const orders = await User.findById(req.userId)
+    // Fetch user orders
+    const user = await User.findById(req.userId)
       .select("delOrders")
       .populate({
         path: "delOrders",
         populate: { path: "lab_id doc_id" },
       });
-    if (!orders.delOrders[0]) {
+
+    // Check if the user has any orders
+    if (!user || !user.delOrders || user.delOrders.length === 0) {
       return res.status(404).json("No Orders Available");
     }
-    return res.status(200).json(orders.delOrders);
+
+    // Filter out orders with specific statuses
+    const filteredOrders = user.delOrders.filter((order) => {
+      const status = order.status;
+      return ![
+        "LabReady(P)",
+        "LabReady(F)",
+        "DocReady(P)",
+        "DocReady(F)",
+      ].includes(status);
+    });
+
+    // Check if any orders remain after filtering
+    if (filteredOrders.length === 0) {
+      return res.status(404).json("No Orders Available");
+    }
+
+    // Return the filtered orders
+    return res.status(200).json(filteredOrders);
   } catch (error) {
+    console.error("Error in getMyOrdersController:", error);
     return res.status(500).json("INTERNAL SERVER ERROR");
   }
 }
