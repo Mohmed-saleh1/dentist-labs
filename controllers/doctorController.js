@@ -88,10 +88,10 @@ exports.editOrderController = async (req, res) => {
       return res.status(400).json("Can't Order Ended Orders");
     }
     const user = await User.findById(req.userId);
-    if (!order.prova) {
+    if (order.body.prova && order.body.prova === "false") {
       order.status = "DocReady(F)";
     }
-    if (!order.file) {
+    if (order.file) {
       order.status = "LabReady(F)";
     }
     return res.status(200).json(order);
