@@ -60,7 +60,7 @@ async function markOrderReadyController(req, res) {
     if (!order) {
       return res.status(404).json("Order Not Found");
     }
-    if (order.status !== "UNDERWAY(P)" || order.status !== "UNDERWAY(F)") {
+    if (order.status !== "UNDERWAY(P)" && order.status !== "UNDERWAY(F)") {
       return res.status(400).json("Can't Set Order To Ready");
     }
     if (order.status === "UNDERWAY(P)") {
