@@ -62,11 +62,11 @@ exports.createOrderController = async (req, res, next) => {
       file: req.body.file,
       video: req.body.video,
     });
-    if (req.body.file) {
-      order.status = "UNDERWAY(P)";
-    } else {
-      order.status = "DocReady(P)";
-    }
+    // if (req.body.file) {
+    //   order.status = "UNDERWAY(P)";
+    // } else {
+    //   order.status = "DocReady(P)";
+    // }
     // Save the order to the database
     await order.save();
     res.status(200).json({ data: order });
