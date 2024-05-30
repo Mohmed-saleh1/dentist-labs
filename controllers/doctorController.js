@@ -63,7 +63,7 @@ exports.createOrderController = async (req, res, next) => {
       video: req.body.video,
     });
     if (req.body.file) {
-      console.log(req.body.file);
+      console.log(` the console log ${req.body.file}`);
       order.status = "UNDERWAY(P)";
     } else {
       order.status = "DocReady(P)";
