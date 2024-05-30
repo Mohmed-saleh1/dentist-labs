@@ -41,11 +41,13 @@ async function markOrderDeliveredLabController(req, res) {
     if (!order) {
       return res.status(404).json("Order Not Found");
     }
+    console.log(order.status);
+
     const user = await User.findById(req.userId);
     if (!user) {
       return res.status(404).json("User Not Found");
     }
-    if (order.status !== "OTW_LAB(P)" || order.status !== "OTW_LAB(F)") {
+    if (order.status !== "OTW_LAB(P)" && order.status !== "OTW_LAB(F)") {
       return res.status(400).json("Can't Set Order Delivered");
     }
     if (order.status === "OTW_LAB(F)") {
