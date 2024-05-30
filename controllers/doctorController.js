@@ -89,12 +89,15 @@ exports.editOrderController = async (req, res) => {
     }
     const user = await User.findById(req.userId);
     if (req.body.prova && req.body.prova === "false") {
+      if (order.status !== "END(P)") {
+        return res.status(401).json({ message: "order status not = END(P)" });
+      }
       order.status = "DocReady(F)";
     }
     if (order.file) {
       order.status = "LabReady(F)";
     }
-    
+
     order.save();
     return res.status(200).json(order);
   } catch (error) {
