@@ -40,6 +40,7 @@ exports.saveFilesNameToDB = asyncHandler(async (req, res, next) => {
     //   );
     // }
 
+    //Image(1) processing
     if (req.files.image && req.files.image.length > 0) {
       const imageFileName = `${Date.now()}-${slugify(
         req.files.image[0].originalname
@@ -55,6 +56,40 @@ exports.saveFilesNameToDB = asyncHandler(async (req, res, next) => {
         );
       });
       req.body.image = `${hostname}/images/${imageFileName}`;
+    }
+    //Image(2) processing
+    if (req.files.image1 && req.files.image1.length > 0) {
+      const imageFileName = `${Date.now()}-${slugify(
+        req.files.image1[0].originalname
+      )}`;
+      await new Promise((resolve, reject) => {
+        fs.writeFile(
+          `uploads/images/${imageFileName}`,
+          req.files.image1[0].buffer,
+          (err) => {
+            if (err) reject(err);
+            else resolve();
+          }
+        );
+      });
+      req.body.image1 = `${hostname}/images/${imageFileName}`;
+    }
+    //Image(3) processing
+    if (req.files.image2 && req.files.image2.length > 0) {
+      const imageFileName = `${Date.now()}-${slugify(
+        req.files.image2[0].originalname
+      )}`;
+      await new Promise((resolve, reject) => {
+        fs.writeFile(
+          `uploads/images/${imageFileName}`,
+          req.files.image2[0].buffer,
+          (err) => {
+            if (err) reject(err);
+            else resolve();
+          }
+        );
+      });
+      req.body.image2 = `${hostname}/images/${imageFileName}`;
     }
     // Process video
     if (req.files.video && req.files.video.length > 0) {

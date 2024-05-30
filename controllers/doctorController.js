@@ -9,6 +9,14 @@ exports.uploadOrderImgsAndFiles = uploadMixOfImages([
     maxCount: 1,
   },
   {
+    name: "image1",
+    maxCount: 1,
+  },
+  {
+    name: "image2",
+    maxCount: 1,
+  },
+  {
     name: "file",
     maxCount: 1,
   },
@@ -49,6 +57,8 @@ exports.createOrderController = async (req, res, next) => {
       lab_id: user.labId._id,
       doc_id: user._id,
       image: req.body.image,
+      image1: req.body.image1,
+      image2: req.body.image2,
       file: req.body.file,
       video: req.body.video,
     });

@@ -90,6 +90,8 @@ const orderSchema = new mongoose.Schema(
       default: true,
     },
     image: String,
+    image1: String,
+    image2: String,
     file: String,
     video: String,
   },
