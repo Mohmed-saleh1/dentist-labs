@@ -56,23 +56,36 @@ async function updateDoctorContractController(req, res) {
 
 async function markOrderReadyController(req, res) {
   try {
+    // Find the order by ID
     const order = await Order.findById(req.params.id);
+
     if (!order) {
       return res.status(404).json("Order Not Found");
     }
+
+    // Check the order status and update accordingly
     if (order.status !== "UNDERWAY(P)" && order.status !== "UNDERWAY(F)") {
       return res.status(400).json("Can't Set Order To Ready");
     }
+
     if (order.status === "UNDERWAY(P)") {
-      order.status = "LABREADY(P)";
+      order.status = "LabReady(P)";
+    } else if (order.status === "UNDERWAY(F)") {
+      order.status = "LabReady(F)";
     }
-    if (order.status === "UNDERWAY(F)") {
-      order.status = "LABREADY(F)";
-    }
+
     await order.save();
+
     return res.status(200).json(order);
   } catch (error) {
-    return res.status(200).json("INTERNAL SERVER ERROR");
+    // Log the error for detailed debugging
+    console.error("Error in markOrderReadyController:", error);
+
+    // Return a detailed error response
+    return res.status(500).json({
+      message: "INTERNAL SERVER ERROR",
+      error: error.message, // Include the error message for debugging
+    });
   }
 }
 
@@ -140,7 +153,9 @@ async function getProfitsController(req, res) {
 
     // Check if startDate and endDate are valid dates
     if (isNaN(start.getTime()) || isNaN(end.getTime())) {
-      return res.status(400).json("Invalid date format. Please use YYYY-MM-DD.");
+      return res
+        .status(400)
+        .json("Invalid date format. Please use YYYY-MM-DD.");
     }
 
     const orders = await Order.find({
@@ -184,8 +199,6 @@ async function getProfitsController(req, res) {
     return res.status(500).json("INTERNAL SERVER ERROR");
   }
 }
-
-
 
 async function setPublicDelivery(req, res) {
   try {
