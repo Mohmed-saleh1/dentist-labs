@@ -57,7 +57,7 @@ async function updateDoctorContractController(req, res) {
 async function markOrderReadyController(req, res) {
   try {
     const order = await Order.findById(req.params.id);
-    if (!order || order.status) {
+    if (!order) {
       return res.status(404).json("Order Not Found");
     }
     if (order.status !== "UNDERWAY(P)" || order.status !== "UNDERWAY(F)") {
