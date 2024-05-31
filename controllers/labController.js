@@ -151,16 +151,9 @@ async function getProfitsController(req, res) {
     const start = new Date(startDate);
     const end = new Date(endDate);
 
-    // Check if startDate and endDate are valid dates
-    if (isNaN(start.getTime()) || isNaN(end.getTime())) {
-      return res
-        .status(400)
-        .json("Invalid date format. Please use YYYY-MM-DD.");
-    }
 
     const orders = await Order.find({
       lab_id: req.userId,
-      status: "END(F)",
       date: {
         $gte: start,
         $lte: end,
