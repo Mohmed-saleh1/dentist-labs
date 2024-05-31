@@ -145,7 +145,7 @@ async function orderPaidController(req, res) {
 
 async function getProfitsController(req, res) {
   try {
-    const { startDate, endDate } = req.body;
+    const { startDate, endDate } = req.query;
 
     // Convert startDate and endDate to Date objects
     const start = new Date(startDate);
