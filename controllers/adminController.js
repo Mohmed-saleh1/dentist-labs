@@ -5,7 +5,7 @@ async function adminLoginController(req, res) {
   try {
     const username = req.body.username;
     if (username !== process.env.ADMIN_USER) {
-      return res.status(404).json("Wrong Username Or Password");
+      return res.status(404).json("Wrong Username");
     }
     // const valid = bcrypt.compareSync(req.body.password, process.env.ADMIN_PASS);
     if (req.body.password !== process.env.ADMIN_PASS) {
