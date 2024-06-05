@@ -88,13 +88,10 @@ exports.editOrderController = async (req, res) => {
       return res.status(404).json("Order Not Found");
     }
     if (order.status == "END(F)") {
-      return res.status(400).json("Can't Order Ended Orders");
+      return res.status(400).json("Can't edit Ended Orders");
     }
     const user = await User.findById(req.userId);
     if (req.body.prova && req.body.prova === "false") {
-      if (order.status !== "END(P)") {
-        return res.status(401).json({ message: "order status not = END(P)" });
-      }
       order.status = "DocReady(F)";
     }
     if (order.file !== "null") {
