@@ -29,7 +29,7 @@ router.put(
 );
 
 router.get("/orders", isDoc, getOrdersController);
-router.get("/orders/:id", isDoc, getOrderByIdController);
+router.get("/orders/:id", getOrderByIdController);
 
 router.get("/financial", isDoc, getProfitsController);
 
