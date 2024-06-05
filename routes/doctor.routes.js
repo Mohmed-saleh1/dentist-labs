@@ -28,7 +28,7 @@ router.put(
   editOrderController
 );
 
-router.get("/orders", isDoc, getOrdersController);
+router.get("/orders", getOrdersController);
 router.get("/orders/:id", getOrderByIdController);
 
 router.get("/financial", isDoc, getProfitsController);
