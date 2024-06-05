@@ -66,7 +66,7 @@ exports.createOrderController = async (req, res, next) => {
     } else {
       order.status = "DocReady(P)";
     }
-    if(req.body.prova && req.body.prova === "true") {
+    if(req.body.prova && req.body.prova === "false") {
       order.status = "DocReady(F)";
     }
     // Save the order to the database
