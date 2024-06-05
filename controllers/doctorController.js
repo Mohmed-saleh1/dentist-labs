@@ -82,7 +82,7 @@ exports.createOrderController = async (req, res, next) => {
 
 exports.editOrderController = async (req, res) => {
   try {
-    const order = await Order.findById(req.params.id);
+    const order = await Order.findByIdAndUpdate(req.params.id, req.body);
     const user = await User.findById(req.userId);
 
     if (!order) {
@@ -92,21 +92,6 @@ exports.editOrderController = async (req, res) => {
     if (order.status === "END(F)") {
       return res.status(400).json("Can't edit Ended Orders");
     }
-
-    order.patientName = req.body.patientName || order.patientName;
-    order.age = req.body.age || order.age;
-    order.price = req.body.price || order.price;
-    order.docReady = req.body.docReady || order.docReady;
-    order.teethNo = req.body.teethNo || order.teethNo;
-    order.sex = req.body.sex || order.sex;
-    order.color = req.body.color || order.color;
-    order.type = req.body.type || order.type;
-    order.description = req.body.description || order.description;
-    order.voiceNote = req.body.voiceNote || order.voiceNote;
-
-    order.price = req.body.type
-      ? req.body.teethNo * user.labContract[req.body.type]
-      : order.price;
 
     if (req.body.prova && req.body.prova === "false") {
       order.status = "DocReady(F)";
