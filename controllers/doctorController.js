@@ -95,6 +95,7 @@ exports.editOrderController = async (req, res) => {
 
     order.patientName = req.body.patientName || order.patientName;
     order.age = req.body.age || order.age;
+    order.price = req.body.price || order.price;
     order.docReady = req.body.docReady || order.docReady;
     order.teethNo = req.body.teethNo || order.teethNo;
     order.sex = req.body.sex || order.sex;
