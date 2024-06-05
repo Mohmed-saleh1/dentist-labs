@@ -90,6 +90,11 @@ const orderSchema = new mongoose.Schema(
       required: false,
       default: true,
     },
+    docReady: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
     image: String,
     image1: String,
     image2: String,

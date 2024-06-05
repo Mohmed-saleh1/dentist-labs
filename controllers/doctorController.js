@@ -29,6 +29,7 @@ exports.createOrderController = async (req, res, next) => {
   try {
     // Find the user and populate the labId field
     const user = await User.findById(req.userId).populate("labId");
+    console.log(user);
     if (!user.labId) {
       return res
         .status(400)
@@ -81,24 +82,47 @@ exports.createOrderController = async (req, res, next) => {
 
 exports.editOrderController = async (req, res) => {
   try {
-    const order = await Order.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-    });
+    const order = await Order.findById(req.params.id);
+    const user = await User.findById(req.userId);
+
     if (!order) {
       return res.status(404).json("Order Not Found");
     }
-    if (order.status == "END(F)") {
+
+    if (order.status === "END(F)") {
       return res.status(400).json("Can't edit Ended Orders");
     }
-    const user = await User.findById(req.userId);
+
+    order.patientName = req.body.patientName || order.patientName;
+    order.age = req.body.age || order.age;
+    order.docReady = req.body.docReady || order.docReady;
+    order.teethNo = req.body.teethNo || order.teethNo;
+    order.sex = req.body.sex || order.sex;
+    order.color = req.body.color || order.color;
+    order.type = req.body.type || order.type;
+    order.description = req.body.description || order.description;
+    order.voiceNote = req.body.voiceNote || order.voiceNote;
+
+    order.price = req.body.type
+      ? req.body.teethNo * user.labContract[req.body.type]
+      : order.price;
+
     if (req.body.prova && req.body.prova === "false") {
       order.status = "DocReady(F)";
     }
+
     if (order.file !== "null") {
       order.status = "LabReady(F)";
     }
 
-    order.save();
+    if (req.body.docReady) {
+      if (order.status !== "END(P)") {
+        return res.status(401).json({ message: "order status not = END(P)" });
+      }
+      order.status = "DocReady(P)";
+    }
+
+    await order.save();
     return res.status(200).json(order);
   } catch (error) {
     console.log(error);

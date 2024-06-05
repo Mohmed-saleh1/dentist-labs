@@ -23,6 +23,7 @@ router.post(
 );
 router.put(
   "/orders/update/:id",
+  isDocOrLab,
   uploadOrderImgsAndFiles,
   saveFilesNameToDB,
   editOrderController
