@@ -2,6 +2,7 @@ var express = require("express");
 
 const upload = require("../utils/uploadImage");
 const isDoc = require("../middlewares/isDoc");
+const isDocOrLab = require("../middlewares/isDoc.isLab");
 const { saveFilesNameToDB } = require("../middlewares/imagesAndFilesProcess");
 const {
   createOrderController,
@@ -22,7 +23,7 @@ router.post(
 );
 router.put(
   "/orders/update/:id",
-  isDoc,
+  isDocOrLab,
   uploadOrderImgsAndFiles,
   saveFilesNameToDB,
   editOrderController
